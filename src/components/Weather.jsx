@@ -3,6 +3,7 @@ import { getCitySuggestions, getWeather } from '../services/weatherApi';
 
 function Weather() {
   const [query, setQuery] = useState('');
+  const [city, setCity] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ function Weather() {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
+
     setSuggestions([]);
     setWeather(null);
 
@@ -37,7 +39,8 @@ function Weather() {
   };
 
   const handleCitySelect = async (city) => {
-    setQuery(city.name);
+    setQuery('');
+    setCity(city.name);
     setSuggestions([]);
     setLoading(true);
     setError('');
@@ -54,7 +57,7 @@ function Weather() {
 
   return (
     <div style={styles.container}>
-      <h2>Weather App</h2>
+      <h2>Weather Now</h2>
 
       <input
         type="text"
@@ -83,7 +86,7 @@ function Weather() {
 
       {weather && (
         <div style={styles.card}>
-          <h3>{query}</h3>
+          <h3>{city}</h3>
           <p>{weather.condition}</p>
           <p>
             🌡 {weather.temperature}
@@ -105,8 +108,8 @@ function Weather() {
 }
 const styles = {
   container: {
-    width: '350px',
-    margin: '50px auto',
+    // width: '350px',
+    // margin: '50px auto',
     textAlign: 'center',
     fontFamily: 'Arial',
   },

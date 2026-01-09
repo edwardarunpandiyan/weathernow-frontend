@@ -1,5 +1,4 @@
-// const BASE_URL = 'http://localhost:5000';
-const BASE_URL = 'https://fatless-jutta-noncontiguous.ngrok-free.dev';
+const BASE_URL = 'https://weathernow-7i7a.onrender.com';
 
 export async function getCitySuggestions(query) {
   if (!query) return [];
