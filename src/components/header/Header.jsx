@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getCitySuggestions, getWeather } from '../services/weatherApi';
+import { getCitySuggestions, getWeather } from '../../services/weatherApi';
 
-function Weather() {
+function Header() {
   const [query, setQuery] = useState('');
   const [city, setCity] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -59,13 +59,13 @@ function Weather() {
     <div style={styles.container}>
       <h2>Weather Now</h2>
 
-      <input
+      {/* <input
         type="text"
         placeholder="Search city"
         value={query}
         onChange={handleInputChange}
         style={styles.input}
-      />
+      /> */}
 
       {suggestions.length > 0 && (
         <ul style={styles.suggestionBox}>
@@ -139,4 +139,4 @@ const styles = {
   },
 };
 
-export default Weather;
+export default Header;

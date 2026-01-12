@@ -1,30 +1,23 @@
-const BASE_URL = 'https://weathernow-7i7a.onrender.com';
+import apiClient from "./apiClient";
 
-export async function getCitySuggestions(query) {
+export async function getCitySuggestions(query, signal) {
   if (!query) return [];
 
-  const res = await fetch(`${BASE_URL}/city?name=${query}`, {
-    headers: {
-      'ngrok-skip-browser-warning': 'true',
-    },
+  const res = await apiClient.get("/city", {
+    params: { name: query },
+    signal,
   });
-  if (!res.ok) return [];
 
-  const json = await res.json();
-  return json.data;
+  return res.data?.data ?? [];
 }
 
-export async function getWeather(latitude, longitude) {
-  const res = await fetch(
-    `${BASE_URL}/weather?latitude=${latitude}&longitude=${longitude}`,
-    {
-      headers: {
-        'ngrok-skip-browser-warning': 'true',
-      },
-    }
-  );
-  if (!res.ok) {
-    throw new Error('Weather fetch failed');
-  }
-  return res.json();
+
+export async function getWeather(latitude, longitude, signal) {
+  const res = await apiClient.get("/weather", {
+    params: { latitude, longitude },
+    signal,
+  });
+
+  return res.data;
 }
+
