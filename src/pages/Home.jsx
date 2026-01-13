@@ -8,8 +8,8 @@ export default function Home() {
     <div className="container">
       <Header />
       <CitySearch />
-      {/* <CurrentWeather />
-      <ForecastTabs /> */}
+      <CurrentWeather />
+      {/* <ForecastTabs /> */}
     </div>
   );
 }
