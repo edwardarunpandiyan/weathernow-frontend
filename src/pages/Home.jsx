@@ -9,7 +9,7 @@ export default function Home() {
       <Header />
       <CitySearch />
       <CurrentWeather />
-      {/* <ForecastTabs /> */}
+      <ForecastTabs />
     </div>
   );
 }
