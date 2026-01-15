@@ -3,27 +3,30 @@ import { useSelector } from "react-redux";
 
 export default function CurrentWeather() {
   const { weather, city } = useSelector(state => state.weather);
-  if (!weather) return null;
+  if (!weather?.current) return null;
+
+  const currentWeather = weather.current;
+  const units = weather.units;
 
   return (
     <div>
-      {weather && (
+      {currentWeather && (
         <div style={styles.card}>
           <h3>{city?.name}</h3>
-          <p>{weather.condition}</p>
+          <p>{currentWeather.condition}</p>
           <p>
-            🌡 {weather.temperature}
-            {weather.units.temperature}
+            🌡 {currentWeather.temperature}
+            {units.temperature}
           </p>
           <p>
-            💨 Wind: {weather.windspeed}
-            {weather.units.windspeed}
+            💨 Wind: {currentWeather.windspeed}
+            {units.windspeed}
           </p>
           <p>
-            🧭 Direction: {weather.winddirection}
-            {weather.units.winddirection}
+            🧭 Direction: {currentWeather.winddirection}
+            {units.winddirection}
           </p>
-          <p>{weather.is_day ? '☀️ Day' : '🌙 Night'}</p>
+          <p>{currentWeather.is_day ? '☀️ Day' : '🌙 Night'}</p>
         </div>
       )}
     </div>
