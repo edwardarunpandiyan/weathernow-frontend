@@ -31,7 +31,11 @@ function Header() {
   const [searchValue, setSearchValue] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
   const searchWrapperRef = useRef(null);
+  const favoritesRef = useRef(null);
   const inputRef = useRef(null);
 
   // Filter cities based on search input
@@ -43,12 +47,37 @@ function Header() {
     )
     : SAMPLE_CITIES;
 
-  // Close dropdown when clicking outside
+  // Check if a city is in favorites
+  const isFavorite = (cityId) => favorites.some((fav) => fav.id === cityId);
+
+  // Toggle favorite status
+  const toggleFavorite = (city, e) => {
+    e?.stopPropagation();
+    if (isFavorite(city.id)) {
+      setFavorites(favorites.filter((fav) => fav.id !== city.id));
+    } else {
+      setFavorites([...favorites, city]);
+    }
+  };
+
+  // Select a city (from search or favorites)
+  const selectCity = (city) => {
+    setSearchValue(`${city.name}, ${city.country}`);
+    setSelectedCity(city);
+    setIsDropdownOpen(false);
+    setIsFavoritesOpen(false);
+    setSelectedIndex(-1);
+  };
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchWrapperRef.current && !searchWrapperRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
         setSelectedIndex(-1);
+      }
+      if (favoritesRef.current && !favoritesRef.current.contains(event.target)) {
+        setIsFavoritesOpen(false);
       }
     };
 
@@ -96,13 +125,6 @@ function Header() {
     }
   };
 
-  // Select a city
-  const selectCity = (city) => {
-    setSearchValue(`${city.name}, ${city.country}`);
-    setIsDropdownOpen(false);
-    setSelectedIndex(-1);
-  };
-
   // Handle input change
   const handleInputChange = (e) => {
     setSearchValue(e.target.value);
@@ -113,6 +135,13 @@ function Header() {
   // Handle input focus
   const handleFocus = () => {
     setIsDropdownOpen(true);
+    setIsFavoritesOpen(false);
+  };
+
+  // Toggle favorites panel
+  const toggleFavoritesPanel = () => {
+    setIsFavoritesOpen(!isFavoritesOpen);
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -144,7 +173,7 @@ function Header() {
               <ellipse cx="34" cy="36" rx="22" ry="4" fill="#d0e8f5" opacity="0.5" />
             </svg>
           </div>
-          <h1 className="header__app-name">Weatherly</h1>
+          <h1 className="header__app-name">WeatherNow</h1>
         </div>
 
         {/* Search and Favorite */}
@@ -231,6 +260,26 @@ function Header() {
                       <span className="header__dropdown-city">{city.name}</span>
                       <span className="header__dropdown-country">{city.country}</span>
                     </div>
+                    {/* Add to favorites button */}
+                    <button
+                      type="button"
+                      className={`header__dropdown-fav-btn ${isFavorite(city.id) ? 'header__dropdown-fav-btn--active' : ''}`}
+                      onClick={(e) => toggleFavorite(city, e)}
+                      aria-label={isFavorite(city.id) ? 'Remove from favorites' : 'Add to favorites'}
+                      title={isFavorite(city.id) ? 'Remove from favorites' : 'Add to favorites'}
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill={isFavorite(city.id) ? 'currentColor' : 'none'}
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -245,27 +294,121 @@ function Header() {
           </div>
 
           {/* Favorite Button */}
-          <button
-            type="button"
-            className="header__favorite-btn"
-            aria-label="View favorite cities"
-            title="Favorites"
-          >
-            <svg
-              className="header__favorite-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
+          <div className="header__favorites-container" ref={favoritesRef}>
+            <button
+              type="button"
+              className={`header__favorite-btn ${isFavoritesOpen ? 'header__favorite-btn--active' : ''} ${favorites.length > 0 ? 'header__favorite-btn--has-items' : ''}`}
+              aria-label="View favorite cities"
+              aria-expanded={isFavoritesOpen}
+              title="Favorites"
+              onClick={toggleFavoritesPanel}
             >
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                stroke="currentColor"
-                strokeWidth="2"
-                fill="none"
-              />
-            </svg>
-          </button>
+              <svg
+                className="header__favorite-icon"
+                viewBox="0 0 24 24"
+                fill={favorites.length > 0 ? 'currentColor' : 'none'}
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </svg>
+              {favorites.length > 0 && (
+                <span className="header__favorite-badge">{favorites.length}</span>
+              )}
+            </button>
+
+            {/* Favorites Panel */}
+            {isFavoritesOpen && (
+              <div className="header__favorites-panel" role="dialog" aria-label="Favorite cities">
+                <div className="header__favorites-header">
+                  <h2 className="header__favorites-title">
+                    <svg
+                      className="header__favorites-title-icon"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    Favorite Cities
+                  </h2>
+                </div>
+
+                {favorites.length === 0 ? (
+                  <div className="header__favorites-empty">
+                    <svg
+                      className="header__favorites-empty-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                    <p>No favorite cities yet</p>
+                    <span>Search and add cities to your favorites</span>
+                  </div>
+                ) : (
+                  <ul className="header__favorites-list">
+                    {favorites.map((city) => (
+                      <li
+                        key={city.id}
+                        className={`header__favorites-item ${selectedCity?.id === city.id ? 'header__favorites-item--active' : ''}`}
+                      >
+                        <button
+                          type="button"
+                          className="header__favorites-item-btn"
+                          onClick={() => selectCity(city)}
+                        >
+                          <svg
+                            className="header__favorites-item-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              fill="none"
+                            />
+                            <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+                          </svg>
+                          <div className="header__favorites-item-text">
+                            <span className="header__favorites-item-city">{city.name}</span>
+                            <span className="header__favorites-item-country">{city.country}</span>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          className="header__favorites-remove-btn"
+                          onClick={(e) => toggleFavorite(city, e)}
+                          aria-label={`Remove ${city.name} from favorites`}
+                          title="Remove from favorites"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                              d="M18 6L6 18M6 6l12 12"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
