@@ -1,0 +1,508 @@
+/* ============================================
+   Hourly Forecast Styles
+   ============================================ */
+
+/* CSS Variables for theming */
+:root {
+    --hourly-bg: #f0f4f8;
+    --hourly-card-bg: #ffffff;
+    --hourly-card-selected-bg: linear-gradient(135deg, #4a7c9b 0%, #5d8aa8 100%);
+    --hourly-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --hourly-card-selected-shadow: 0 8px 24px rgba(74, 124, 155, 0.35);
+    --hourly-text-primary: #2d4356;
+    --hourly-text-secondary: #6b7c8a;
+    --hourly-text-light: #ffffff;
+    --hourly-radial-bg: linear-gradient(180deg, #e8eef3 0%, #d3dde6 100%);
+    --hourly-radial-border: #c9d6e0;
+    --hourly-radial-inner-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.08);
+    --hourly-sunny-arc: linear-gradient(90deg, #ffd700 0%, #ffb347 100%);
+    --hourly-cloudy-arc: #a8bfcf;
+    --hourly-transition: all 0.3s ease;
+}
+
+/* Container */
+.hourly-forecast {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.hourly-forecast__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--hourly-text-primary);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* ============================================
+     Radial Visualization
+     ============================================ */
+.hourly-radial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.hourly-radial__container {
+    position: relative;
+    width: min(420px, 85vw);
+    height: min(420px, 85vw);
+    padding: 20px;
+    box-sizing: content-box;
+}
+
+.hourly-radial__svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.12));
+}
+
+/* Radial background */
+.hourly-radial__bg {
+    fill: url(#radialGradient);
+    stroke: var(--hourly-radial-border);
+    stroke-width: 2;
+}
+
+/* Inner circle */
+.hourly-radial__inner-bg {
+    fill: url(#innerGradient);
+}
+
+/* Hour tick marks */
+.hourly-radial__tick {
+    stroke: #b8c9d6;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.hourly-radial__tick--major {
+    stroke: #8fa8bb;
+    stroke-width: 3;
+}
+
+/* Hour markers (dots) */
+.hourly-radial__marker {
+    fill: #ffffff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    cursor: pointer;
+    transition: var(--hourly-transition);
+    outline: none;
+}
+
+.hourly-radial__marker:hover {
+    fill: #e0e8ef;
+}
+
+.hourly-radial__marker:focus {
+    fill: #d0dae5;
+}
+
+.hourly-radial__marker:active {
+    fill: #c0ccd8;
+}
+
+.hourly-radial__marker--selected {
+    fill: #ffd700;
+    filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.6));
+}
+
+.hourly-radial__marker--selected:hover {
+    fill: #ffe44d;
+}
+
+.hourly-radial__marker--current {
+    fill: #ffd700;
+    filter: drop-shadow(0 2px 6px rgba(255, 215, 0, 0.5));
+}
+
+.hourly-radial__marker--disabled {
+    fill: #d0d8e0;
+    opacity: 0.5;
+    cursor: default;
+}
+
+.hourly-radial__marker--disabled:hover {
+    fill: #d0d8e0;
+}
+
+/* Weather arc */
+.hourly-radial__arc {
+    fill: none;
+    stroke-width: 16;
+    stroke-linecap: round;
+    opacity: 0.9;
+}
+
+.hourly-radial__arc--sunny {
+    stroke: url(#sunnyGradient);
+}
+
+.hourly-radial__arc--cloudy {
+    stroke: #a8bfcf;
+}
+
+.hourly-radial__arc--rainy {
+    stroke: #7a9bb5;
+}
+
+/* Hour labels on radial */
+.hourly-radial__hour-label {
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--hourly-text-secondary);
+}
+
+.hourly-radial__hour-label-suffix {
+    font-size: 10px;
+    font-weight: 500;
+}
+
+/* Center content */
+.hourly-radial__center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 60%;
+}
+
+.hourly-radial__time-label {
+    font-size: 0.85rem;
+    color: var(--hourly-text-secondary);
+    font-weight: 500;
+}
+
+.hourly-radial__temp-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.hourly-radial__temp {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 300;
+    color: var(--hourly-text-primary);
+    line-height: 1;
+}
+
+.hourly-radial__temp-icon {
+    width: clamp(32px, 8vw, 48px);
+    height: clamp(32px, 8vw, 48px);
+}
+
+.hourly-radial__condition {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-weight: 500;
+    color: var(--hourly-text-primary);
+    margin-top: 4px;
+}
+
+.hourly-radial__feels-like {
+    font-size: 0.9rem;
+    color: var(--hourly-text-secondary);
+}
+
+/* Radial center details grid */
+.hourly-radial__details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    margin-top: 8px;
+    width: 100%;
+    max-width: 180px;
+}
+
+.hourly-radial__detail-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--hourly-text-secondary);
+}
+
+.hourly-radial__detail-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    stroke: var(--hourly-text-secondary);
+}
+
+/* Weather icons on radial ring */
+.hourly-radial__weather-icon {
+    width: 36px;
+    height: 36px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* ============================================
+     Hour Cards Section
+     ============================================ */
+.hourly-cards {
+    position: relative;
+}
+
+.hourly-cards__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hourly-cards__nav-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--hourly-card-bg);
+    box-shadow: var(--hourly-card-shadow);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--hourly-transition);
+    color: var(--hourly-text-primary);
+}
+
+.hourly-cards__nav-btn:hover {
+    background: #f5f8fa;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.hourly-cards__nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.hourly-cards__nav-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.hourly-cards__scroll-container {
+    flex: 1;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+}
+
+.hourly-cards__scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.hourly-cards__list {
+    display: flex;
+    gap: 12px;
+    padding: 8px 4px;
+}
+
+/* ============================================
+     Hour Card
+     ============================================ */
+.hour-card {
+    flex-shrink: 0;
+    width: 100px;
+    padding: 16px 12px;
+    border-radius: 16px;
+    background: var(--hourly-card-bg);
+    box-shadow: var(--hourly-card-shadow);
+    cursor: pointer;
+    transition: var(--hourly-transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    scroll-snap-align: start;
+    border: 2px solid transparent;
+}
+
+.hour-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.hour-card.hour-card--selected {
+    background: var(--hourly-card-selected-bg);
+    box-shadow: var(--hourly-card-selected-shadow);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.hour-card--selected:hover {
+    transform: translateY(-4px);
+}
+
+.hour-card__time {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--hourly-text-primary);
+    text-transform: uppercase;
+}
+
+.hour-card--selected .hour-card__time {
+    color: var(--hourly-text-light);
+}
+
+.hour-card__now-label {
+    font-size: 0.7rem;
+    color: var(--hourly-text-secondary);
+    margin-bottom: -4px;
+}
+
+.hour-card--selected .hour-card__now-label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.hour-card__icon {
+    width: 48px;
+    height: 48px;
+}
+
+.hour-card__temp {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--hourly-text-primary);
+}
+
+.hour-card--selected .hour-card__temp {
+    color: var(--hourly-text-light);
+}
+
+/* ============================================
+     Weather Icon Component
+     ============================================ */
+.weather-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ============================================
+     Responsive Design
+     ============================================ */
+@media (max-width: 768px) {
+    .hourly-forecast {
+        padding: 16px 12px;
+    }
+
+    .hourly-radial__container {
+        width: min(340px, 80vw);
+        height: min(340px, 80vw);
+        padding: 16px;
+    }
+
+    .hourly-radial__hour-label {
+        font-size: 12px;
+    }
+
+    .hourly-cards__nav-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .hour-card {
+        width: 90px;
+        padding: 12px 10px;
+    }
+
+    .hour-card__icon {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hourly-radial__container {
+        width: min(300px, 75vw);
+        height: min(300px, 75vw);
+        padding: 12px;
+    }
+
+    .hourly-radial__center {
+        width: 55%;
+    }
+
+    .hourly-radial__time-label {
+        font-size: 0.75rem;
+    }
+
+    .hourly-radial__condition {
+        font-size: 0.9rem;
+    }
+
+    .hourly-radial__details {
+        gap: 4px 8px;
+        max-width: 140px;
+    }
+
+    .hourly-radial__detail-item {
+        font-size: 0.65rem;
+    }
+
+    .hourly-radial__detail-icon {
+        width: 12px;
+        height: 12px;
+    }
+
+    .hourly-radial__feels-like {
+        font-size: 0.8rem;
+    }
+
+    .hourly-cards__nav-btn {
+        display: none;
+    }
+
+    .hourly-cards__wrapper {
+        padding: 0;
+    }
+
+    .hour-card {
+        width: 85px;
+        padding: 10px 8px;
+        border-radius: 12px;
+    }
+
+    .hour-card__time {
+        font-size: 0.75rem;
+    }
+
+    .hour-card__icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .hour-card__temp {
+        font-size: 1.1rem;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .hour-card:hover {
+        transform: none;
+    }
+
+    .hour-card:active {
+        transform: scale(0.98);
+    }
+
+    .hourly-cards__scroll-container {
+        -webkit-overflow-scrolling: touch;
+    }
+}
