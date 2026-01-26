@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import './Header.css';
+import '../../styles/header/Header.css';
 
 /**
  * Sample cities data

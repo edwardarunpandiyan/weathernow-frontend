@@ -1,4 +1,5 @@
 
+import DayForecast from "../components/day forecast/DayForecast";
 import CitySearch from "../components/weather/CitySearch";
 import CurrentWeather from "../components/weather/CurrentWeather";
 import ForecastTabs from "../components/weather/ForecastTabs";
@@ -7,9 +8,10 @@ export default function Home() {
   return (
     <div>
       <Header />
-      <CitySearch />
-      <CurrentWeather />
-      <ForecastTabs />
+      <DayForecast />
+      {/* <CitySearch /> */}
+      {/* <CurrentWeather /> */}
+      {/* <ForecastTabs /> */}
     </div>
   );
 }
