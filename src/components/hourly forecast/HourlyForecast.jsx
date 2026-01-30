@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-// import HourForecastRadial from '../hour forecast radial/HourForecastRadial';
+import HourForecastRadial from '../hour forecast radial/HourForecastRadial';
 import HourForecastCard from '../hour forecast card/HourForecastCard';
 import '../../styles/hourly forecast/HourlyForecast.css';
 
@@ -163,11 +163,11 @@ const HourlyForecast = () => {
             {/* <h2 className="hourly-forecast__title">Hourly Forecast</h2> */}
 
             {/* Radial Visualization */}
-            {/* <HourForecastRadial
+            <HourForecastRadial
                 hourlyData={hourlyData}
                 selectedIndex={selectedIndex}
                 onHourSelect={handleHourSelect}
-            /> */}
+            />
 
             {/* Hour Cards Section */}
             <div className="hourly-cards">
