@@ -90,6 +90,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
     border: 2px solid transparent;
+    height: 50px;
+    box-sizing: border-box;
 }
 
 .header__search-wrapper:focus-within {
@@ -336,6 +338,8 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 2px solid transparent;
     position: relative;
+    height: 50px;
+    box-sizing: border-box;
 }
 
 .header__favorite-btn:hover {
@@ -597,10 +601,12 @@
 
     .header__search-wrapper {
         padding: 14px 20px;
+        height: 54px;
     }
 
     .header__favorite-btn {
         padding: 14px 20px;
+        height: 54px;
     }
 
     .header__dropdown-item {
@@ -639,6 +645,7 @@
 
     .header__search-wrapper {
         padding: 16px 24px;
+        height: 60px;
     }
 
     .header__search-icon {
@@ -652,6 +659,7 @@
 
     .header__favorite-btn {
         padding: 16px 24px;
+        height: 60px;
     }
 
     .header__favorite-icon {
