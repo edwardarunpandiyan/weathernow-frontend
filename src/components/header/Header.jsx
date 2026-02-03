@@ -1,4 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks'
+import { useDebounce } from '../../hooks/useDebounce'
+import { useLiveTime } from '../../hooks/useLiveTime'
+import {
+  fetchWeather,
+  fetchCitySuggestions,
+  clearSuggestions,
+  addFavorite,
+  removeFavorite,
+} from '../../features/weather/weatherSlice';
+import { isFavorite } from '../../utils/storage';
+import { APP_CONFIG } from '../../config/appConfig';
 import '../../styles/header/Header.css';
 
 /**

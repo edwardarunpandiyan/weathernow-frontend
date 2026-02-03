@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { initializeApp } from '../features/weather/weatherSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/useAppHooks';
 import Header from "../components/header/Header"
 import LocationInfo from "../components/location info/LocationInfo";
 import DayForecast from "../components/day forecast/DayForecast";
 import HourlyForecast from "../components/hourly forecast/HourlyForecast";
-import CitySearch from "../components/weather/CitySearch";
-import CurrentWeather from "../components/weather/CurrentWeather";
-import ForecastTabs from "../components/weather/ForecastTabs";
+
 export default function Home() {
+  const dispatch = useAppDispatch();
   // Sample location data - can be updated via search or other means
   const [currentLocation, setCurrentLocation] = useState({
     city: 'San Francisco',
@@ -14,10 +15,16 @@ export default function Home() {
     country: 'United States'
   });
 
+  useEffect(() => {
+    dispatch(initializeApp());
+  }, [dispatch]);
+
   const handleLocationChange = (location) => {
     // Force re-render by creating new object
     setCurrentLocation({ ...location });
   };
+
+
   return (
     <div>
       <Header />
@@ -27,9 +34,6 @@ export default function Home() {
       />
       <DayForecast />
       <HourlyForecast />
-      {/* <CitySearch /> */}
-      {/* <CurrentWeather /> */}
-      {/* <ForecastTabs /> */}
     </div>
   );
 }
