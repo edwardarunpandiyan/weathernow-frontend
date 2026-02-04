@@ -40,15 +40,41 @@ const SAMPLE_CITIES = [
  * Mobile-first design using Flexbox.
  */
 function Header() {
+  const dispatch = useAppDispatch();
+  const {
+    weather,
+    selectedCity,
+    favorites,
+    suggestions,
+    isSuggestionsLoading,
+  } = useAppSelector((state) => state.weather);
+  const { formattedTime } = useLiveTime();
+
   const [searchValue, setSearchValue] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
-  const [favorites, setFavorites] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
+  // const [favorites, setFavorites] = useState([]);
+  // const [selectedCity, setSelectedCity] = useState(null);
   const searchWrapperRef = useRef(null);
   const favoritesRef = useRef(null);
   const inputRef = useRef(null);
+
+  const debouncedQuery = useDebounce(
+    searchValue,
+    APP_CONFIG.apiDebounceMs
+  );
+
+  // Fetch suggestions
+  useEffect(() => {
+    if (debouncedQuery.trim().length >= 2) {
+      dispatch(fetchCitySuggestions(debouncedQuery));
+      setIsDropdownOpen(true);
+    } else {
+      dispatch(clearSuggestions());
+      setIsDropdownOpen(false);
+    }
+  }, [debouncedQuery, dispatch]);
 
   // Filter cities based on search input
   const filteredCities = searchValue.trim()
@@ -74,8 +100,8 @@ function Header() {
 
   // Select a city (from search or favorites)
   const selectCity = (city) => {
-    setSearchValue(`${city.name}, ${city.country}`);
-    setSelectedCity(city);
+    // setSearchValue(`${city.name}, ${city.country}`);
+    // setSelectedCity(city);
     setIsDropdownOpen(false);
     setIsFavoritesOpen(false);
     setSelectedIndex(-1);
@@ -135,6 +161,13 @@ function Header() {
       default:
         break;
     }
+  };
+
+  const handleCitySelect = (city) => {
+    dispatch(fetchWeather(city));
+    setSearchValue("");
+    setIsDropdownOpen(false);
+    dispatch(clearSuggestions());
   };
 
   // Handle input change
@@ -235,14 +268,14 @@ function Header() {
             </div>
 
             {/* Custom Dropdown */}
-            {isDropdownOpen && filteredCities.length > 0 && (
+            {isDropdownOpen && suggestions.length > 0 && (
               <ul
                 id="city-suggestions-list"
                 className="header__dropdown"
                 role="listbox"
                 aria-label="City suggestions"
               >
-                {filteredCities.map((city, index) => (
+                {suggestions.map((city, index) => (
                   <li
                     key={city.id}
                     id={`city-option-${city.id}`}
@@ -250,7 +283,7 @@ function Header() {
                       }`}
                     role="option"
                     aria-selected={index === selectedIndex}
-                    onClick={() => selectCity(city)}
+                    onClick={() => handleCitySelect(city)}
                     onMouseEnter={() => setSelectedIndex(index)}
                   >
                     <svg
@@ -270,7 +303,7 @@ function Header() {
                     </svg>
                     <div className="header__dropdown-text">
                       <span className="header__dropdown-city">{city.name}</span>
-                      <span className="header__dropdown-country">{city.country}</span>
+                      <span className="header__dropdown-country">{`${city.state} / ${city.country}`}</span>
                     </div>
                     {/* Add to favorites button */}
                     <button
@@ -298,7 +331,7 @@ function Header() {
             )}
 
             {/* No results message */}
-            {isDropdownOpen && searchValue.trim() && filteredCities.length === 0 && (
+            {isDropdownOpen && searchValue.trim() && suggestions.length === 0 && (
               <div className="header__dropdown header__dropdown--empty">
                 <p className="header__dropdown-no-results">No cities found</p>
               </div>
