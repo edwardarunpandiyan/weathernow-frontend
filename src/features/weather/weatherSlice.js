@@ -30,7 +30,7 @@ export const fetchWeather = createAsyncThunk(
     try {
       const data = await getWeather(city.latitude, city.longitude);
       setRecentCity(city);
-      return { weather: data, city };
+      return { weather: data.data, city };
     } catch (error) {
       return rejectWithValue("Failed to fetch weather data");
     }

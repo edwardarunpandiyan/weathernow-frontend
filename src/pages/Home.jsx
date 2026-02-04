@@ -5,20 +5,27 @@ import Header from "../components/header/Header"
 import LocationInfo from "../components/location info/LocationInfo";
 import DayForecast from "../components/day forecast/DayForecast";
 import HourlyForecast from "../components/hourly forecast/HourlyForecast";
+import SkeletonLoader from '../components/skeleton loader/SkeletonLoader';
 
 export default function Home() {
   const dispatch = useAppDispatch();
+  const {
+    isLoading,
+  } = useAppSelector((state) => state.weather);
 
   useEffect(() => {
     dispatch(initializeApp());
   }, [dispatch]);
 
   return (
-    <div>
-      <Header />
-      <LocationInfo />
-      <DayForecast />
-      <HourlyForecast />
-    </div>
+    isLoading ?
+      <SkeletonLoader />
+      :
+      <div>
+        <Header />
+        <LocationInfo />
+        <DayForecast />
+        <HourlyForecast />
+      </div>
   );
 }
