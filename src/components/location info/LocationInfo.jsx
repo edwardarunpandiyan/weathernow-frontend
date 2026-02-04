@@ -3,6 +3,7 @@ import {
     addFavorite,
     removeFavorite,
 } from "../../features/weather/weatherSlice";
+import { isFavorite } from '../../utils/storage';
 
 import '../../styles/location info/LocationInfo.css';
 
@@ -12,34 +13,28 @@ import '../../styles/location info/LocationInfo.css';
  * Persists favorites to localStorage.
  */
 function LocationInfo() {
+
     const dispatch = useAppDispatch();
     const {
+        isLoading,
         selectedCity,
         favorites,
     } = useAppSelector((state) => state.weather);
 
-    // Check if current location is in favorites
-    const isFavorite = () => {
-        return favorites.some(
-            (fav) =>
-                fav.name === selectedCity?.name &&
-                fav.state === selectedCity?.state &&
-                fav.country === selectedCity?.country
-        );
-    };
+    if (!selectedCity) return null
 
     // Toggle favorite status
     const toggleFavorite = (e) => {
         e.stopPropagation();
 
-        if (isFavorite()) {
+        if (isFavorite(selectedCity?.id)) {
             dispatch(removeFavorite(selectedCity.id));
         } else {
             dispatch(addFavorite(selectedCity));
         }
     };
 
-    const isCurrentFavorite = isFavorite();
+    const isCurrentFavorite = isFavorite(selectedCity?.id);
 
     return (
         <section className="location-card" aria-label="Current location">

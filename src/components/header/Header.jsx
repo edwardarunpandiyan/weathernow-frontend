@@ -7,32 +7,11 @@ import {
   fetchCitySuggestions,
   clearSuggestions,
   addFavorite,
-  removeFavorite,
+  removeFavorite
 } from '../../features/weather/weatherSlice';
 import { isFavorite } from '../../utils/storage';
 import { APP_CONFIG } from '../../config/appConfig';
 import '../../styles/header/Header.css';
-
-/**
- * Sample cities data
- */
-const SAMPLE_CITIES = [
-  { id: 1, name: 'New York', country: 'USA' },
-  { id: 2, name: 'London', country: 'UK' },
-  { id: 3, name: 'Tokyo', country: 'Japan' },
-  { id: 4, name: 'Paris', country: 'France' },
-  { id: 5, name: 'Sydney', country: 'Australia' },
-  { id: 6, name: 'Berlin', country: 'Germany' },
-  { id: 7, name: 'Toronto', country: 'Canada' },
-  { id: 8, name: 'Dubai', country: 'UAE' },
-  { id: 9, name: 'Singapore', country: 'Singapore' },
-  { id: 10, name: 'Los Angeles', country: 'USA' },
-  { id: 11, name: 'Chicago', country: 'USA' },
-  { id: 12, name: 'Mumbai', country: 'India' },
-  { id: 13, name: 'Hong Kong', country: 'China' },
-  { id: 14, name: 'Seoul', country: 'South Korea' },
-  { id: 15, name: 'Barcelona', country: 'Spain' },
-];
 
 /**
  * Header Component
@@ -42,7 +21,6 @@ const SAMPLE_CITIES = [
 function Header() {
   const dispatch = useAppDispatch();
   const {
-    weather,
     selectedCity,
     favorites,
     suggestions,
@@ -54,8 +32,7 @@ function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
-  // const [favorites, setFavorites] = useState([]);
-  // const [selectedCity, setSelectedCity] = useState(null);
+
   const searchWrapperRef = useRef(null);
   const favoritesRef = useRef(null);
   const inputRef = useRef(null);
@@ -76,35 +53,14 @@ function Header() {
     }
   }, [debouncedQuery, dispatch]);
 
-  // Filter cities based on search input
-  const filteredCities = searchValue.trim()
-    ? SAMPLE_CITIES.filter(
-      (city) =>
-        city.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        city.country.toLowerCase().includes(searchValue.toLowerCase())
-    )
-    : SAMPLE_CITIES;
-
-  // Check if a city is in favorites
-  const isFavorite = (cityId) => favorites.some((fav) => fav.id === cityId);
-
   // Toggle favorite status
   const toggleFavorite = (city, e) => {
     e?.stopPropagation();
     if (isFavorite(city.id)) {
-      setFavorites(favorites.filter((fav) => fav.id !== city.id));
+      dispatch(removeFavorite(city.id));
     } else {
-      setFavorites([...favorites, city]);
+      dispatch(addFavorite(city));
     }
-  };
-
-  // Select a city (from search or favorites)
-  const selectCity = (city) => {
-    // setSearchValue(`${city.name}, ${city.country}`);
-    // setSelectedCity(city);
-    setIsDropdownOpen(false);
-    setIsFavoritesOpen(false);
-    setSelectedIndex(-1);
   };
 
   // Close dropdowns when clicking outside
@@ -138,19 +94,19 @@ function Header() {
       case 'ArrowDown':
         event.preventDefault();
         setSelectedIndex((prev) =>
-          prev < filteredCities.length - 1 ? prev + 1 : 0
+          prev < suggestions.length - 1 ? prev + 1 : 0
         );
         break;
       case 'ArrowUp':
         event.preventDefault();
         setSelectedIndex((prev) =>
-          prev > 0 ? prev - 1 : filteredCities.length - 1
+          prev > 0 ? prev - 1 : suggestions.length - 1
         );
         break;
       case 'Enter':
         event.preventDefault();
-        if (selectedIndex >= 0 && filteredCities[selectedIndex]) {
-          selectCity(filteredCities[selectedIndex]);
+        if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+          handleCitySelect(suggestions[selectedIndex]);
         }
         break;
       case 'Escape':
@@ -167,6 +123,8 @@ function Header() {
     dispatch(fetchWeather(city));
     setSearchValue("");
     setIsDropdownOpen(false);
+    setIsFavoritesOpen(false);
+    setSelectedIndex(-1);
     dispatch(clearSuggestions());
   };
 
@@ -261,7 +219,7 @@ function Header() {
                 aria-expanded={isDropdownOpen}
                 aria-controls="city-suggestions-list"
                 aria-activedescendant={
-                  selectedIndex >= 0 ? `city-option-${filteredCities[selectedIndex]?.id}` : undefined
+                  selectedIndex >= 0 ? `city-option-${suggestions[selectedIndex]?.id}` : undefined
                 }
                 autoComplete="off"
               />
@@ -410,7 +368,7 @@ function Header() {
                         <button
                           type="button"
                           className="header__favorites-item-btn"
-                          onClick={() => selectCity(city)}
+                          onClick={() => handleCitySelect(city)}
                         >
                           <svg
                             className="header__favorites-item-icon"
@@ -428,7 +386,7 @@ function Header() {
                           </svg>
                           <div className="header__favorites-item-text">
                             <span className="header__favorites-item-city">{city.name}</span>
-                            <span className="header__favorites-item-country">{city.country}</span>
+                            <span className="header__favorites-item-country">{`${city.state} / ${city.country}`}</span>
                           </div>
                         </button>
                         <button
