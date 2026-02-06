@@ -5,20 +5,6 @@ import { setSelectedDayIndex } from '../../features/weather/weatherSlice';
 import '../../styles/day forecast/DayForecast.css';
 
 /**
- * Sample forecast data for 7 days
- * In production, this would come from an API
- */
-const defaultForecastData = [
-    { id: 1, day: 'Tue', icon: 'sun-cloud', maxTemp: 32, minTemp: 24 },
-    { id: 2, day: 'Wed', icon: 'sun', maxTemp: 31, minTemp: 23 },
-    { id: 3, day: 'Thu', icon: 'sun-cloud', maxTemp: 31, minTemp: 24 },
-    { id: 4, day: 'Fri', icon: 'cloudy-sun', maxTemp: 32, minTemp: 24 },
-    { id: 5, day: 'Sat', icon: 'cloudy-sun', maxTemp: 32, minTemp: 25 },
-    { id: 6, day: 'Sun', icon: 'sun', maxTemp: 30, minTemp: 23 },
-    { id: 7, day: 'Mon', icon: 'sun', maxTemp: 31, minTemp: 24 },
-];
-
-/**
  * SevenDayForecast Component
  * Displays a responsive 7-day weather forecast with horizontal scroll on mobile
  * 

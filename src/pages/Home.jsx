@@ -18,14 +18,17 @@ export default function Home() {
   }, [dispatch]);
 
   return (
-    isLoading ?
-      <SkeletonLoader />
-      :
-      <div>
-        <Header />
-        <LocationInfo />
-        <DayForecast />
-        <HourlyForecast />
-      </div>
+    <div>
+      <Header />
+      {isLoading ?
+        <SkeletonLoader />
+        :
+        <div>
+
+          <LocationInfo />
+          <DayForecast />
+          <HourlyForecast />
+        </div>}
+    </div>
   );
 }
