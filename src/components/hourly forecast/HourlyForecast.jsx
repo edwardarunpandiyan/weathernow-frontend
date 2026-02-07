@@ -40,6 +40,13 @@ const HourlyForecast = () => {
     // Ref for scroll container
     const scrollContainerRef = useRef(null);
 
+    // Scroll to now card on mount
+    useEffect(() => {
+        for (let i = 0; i < hourlyData.length; i++) {
+            if (hourlyData[i]?.isNow) setSelectedIndex(i)
+        }
+    }, []);
+
     // Scroll to selected card on mount
     useEffect(() => {
         if (scrollContainerRef.current) {

@@ -72,7 +72,7 @@ function RadialInfoSkeleton() {
 function HourCardSkeleton({ active }) {
     return (
         <div className={`skeleton-hour-card ${active ? "active" : ""}`}>
-            <div className="skeleton-pulse skeleton-hour-card__badge" />
+            {/* <div className="skeleton-pulse skeleton-hour-card__badge" /> */}
             <div className="skeleton-pulse skeleton-hour-card__time" />
             <div className="skeleton-pulse skeleton-hour-card__icon" />
             <div className="skeleton-pulse skeleton-hour-card__temp" />
@@ -84,7 +84,7 @@ function HourCardsSkeleton() {
     return (
         <div className="skeleton-hours">
             <div className="skeleton-hours__scroll">
-                {Array.from({ length: 8 }).map((_, i) => (
+                {Array.from({ length: 7 }).map((_, i) => (
                     <HourCardSkeleton key={i} active={i === 0} />
                 ))}
             </div>

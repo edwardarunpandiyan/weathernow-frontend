@@ -24,7 +24,6 @@ export default function Home() {
         <SkeletonLoader />
         :
         <div>
-
           <LocationInfo />
           <DayForecast />
           <HourlyForecast />
