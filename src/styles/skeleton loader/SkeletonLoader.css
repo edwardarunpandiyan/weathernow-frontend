@@ -1,0 +1,264 @@
+/* ───────────────── Container ───────────────── */
+.skeleton-container {
+    width: 100%;
+    padding: 16px;
+}
+
+/* CENTER EVERYTHING */
+.skeleton-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* ───────────────── City Info ───────────────── */
+.skeleton-city {
+    margin-bottom: 16px;
+    padding: 10px 16px;
+}
+
+.skeleton-city__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.skeleton-city__name {
+    width: 160px;
+    height: 24px;
+}
+
+.skeleton-city__heart {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.skeleton-city__subtitle {
+    width: 120px;
+    height: 14px;
+    margin-top: 8px;
+}
+
+/* ───────────────── Day Cards ───────────────── */
+.skeleton-days {
+    /* width: 100%; */
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+}
+
+.skeleton-days__scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+}
+
+.skeleton-day-card {
+    width: 110px;
+    min-height: 160px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.skeleton-day-card__name {
+    height: 20px;
+    margin-bottom: 20px;
+}
+
+.skeleton-day-card__icon {
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.skeleton-day-card__temp {
+    height: 20px;
+}
+
+/* ───────────────── Radial ───────────────── */
+.skeleton-radial {
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 16px 24px 16px;
+}
+
+.skeleton-radial__label {
+    width: 40px;
+    height: 14px;
+    margin-bottom: 12px;
+}
+
+.skeleton-radial__circle {
+    width: 400px;
+    height: 380px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skeleton-radial__inner {
+    text-align: center;
+}
+
+.skeleton-radial__time {
+    width: 60px;
+    height: 20px;
+    margin: 0 auto 6px;
+}
+
+.skeleton-radial__temp {
+    width: 80px;
+    height: 50px;
+    margin: 0 auto 8px;
+}
+
+.skeleton-radial__condition {
+    width: 90px;
+    height: 20px;
+    margin: 0 auto 12px;
+}
+
+.skeleton-radial__details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.skeleton-radial__detail {
+    height: 12px;
+}
+
+/* ───────────────── Hour Cards ───────────────── */
+.skeleton-hours {
+    /* width: 100%; */
+    display: flex;
+    justify-content: center;
+}
+
+.skeleton-hours__scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+}
+
+.skeleton-hour-card {
+    width: 100px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.skeleton-hour-card__badge,
+.skeleton-hour-card__time,
+.skeleton-hour-card__icon,
+.skeleton-hour-card__temp {
+    height: 20px;
+    margin-bottom: 15px;
+}
+
+.skeleton-hour-card__icon {
+    height: 40px;
+}
+
+/* ───────────────── Pulse Animations ───────────────── */
+.skeleton-pulse,
+.skeleton-pulse--glass,
+.skeleton-pulse--glass-dim {
+    background: linear-gradient(90deg,
+            #e5e7eb 25%,
+            #f3f4f6 37%,
+            #e5e7eb 63%);
+    background-size: 400% 100%;
+    animation: pulse 1.4s ease infinite;
+    border-radius: 6px;
+}
+
+.skeleton-pulse--glass {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.4),
+            rgba(255, 255, 255, 0.8),
+            rgba(255, 255, 255, 0.4));
+}
+
+.skeleton-pulse--glass-dim {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+@keyframes pulse {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+/* ==========================================
+     Responsive Styles
+     ========================================== */
+
+/* Large Desktop */
+@media (min-width: 1024px) {
+    .skeleton-city {
+        padding: 0 32px;
+    }
+
+    .skeleton-day-card {
+        width: 120px;
+        /* min-height: 150px; */
+    }
+}
+
+/* Tablet */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .skeleton-city {
+        padding: 0 24px;
+    }
+
+    .skeleton-day-card {
+        width: 115px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .skeleton-city {
+        margin-bottom: 0px;
+    }
+
+    .skeleton-day-card {
+        width: 100px;
+        min-height: 130px;
+        padding: 14px 10px;
+        scroll-snap-align: center;
+    }
+
+    .skeleton-days {
+        padding: 24px 8px;
+    }
+
+    .skeleton-radial__circle {
+        width: 270px;
+        height: 250px;
+    }
+
+    .skeleton-radial {
+        padding: 30px 16px 24px 16px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .skeleton-day-card {
+        width: 90px;
+        min-height: 120px;
+        padding: 12px 8px;
+    }
+}

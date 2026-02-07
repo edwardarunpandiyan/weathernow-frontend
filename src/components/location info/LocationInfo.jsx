@@ -1,3 +1,10 @@
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks'
+import {
+    addFavorite,
+    removeFavorite,
+} from "../../features/weather/weatherSlice";
+import { isFavorite } from '../../utils/storage';
+
 import '../../styles/location info/LocationInfo.css';
 
 /**
@@ -5,64 +12,29 @@ import '../../styles/location info/LocationInfo.css';
  * Displays current location info with city, state, country and favorite button.
  * Persists favorites to localStorage.
  */
-function LocationInfo({ location, onLocationChange }) {
-    // Get favorites from localStorage on mount
-    const getFavoritesFromStorage = () => {
-        try {
-            const stored = localStorage.getItem('weatherly_location_favorites');
-            return stored ? JSON.parse(stored) : [];
-        } catch {
-            return [];
-        }
-    };
+function LocationInfo() {
 
-    // Save favorites to localStorage
-    const saveFavoritesToStorage = (favs) => {
-        try {
-            localStorage.setItem('weatherly_location_favorites', JSON.stringify(favs));
-        } catch {
-            // Storage not available
-        }
-    };
+    const dispatch = useAppDispatch();
+    const {
+        isLoading,
+        selectedCity,
+        favorites,
+    } = useAppSelector((state) => state.weather);
 
-    // Check if current location is in favorites
-    const isFavorite = () => {
-        const favorites = getFavoritesFromStorage();
-        return favorites.some(
-            (fav) =>
-                fav.city === location.city &&
-                fav.state === location.state &&
-                fav.country === location.country
-        );
-    };
+    if (!selectedCity) return null
 
     // Toggle favorite status
-    const toggleFavorite = () => {
-        const favorites = getFavoritesFromStorage();
-        const existingIndex = favorites.findIndex(
-            (fav) =>
-                fav.city === location.city &&
-                fav.state === location.state &&
-                fav.country === location.country
-        );
+    const toggleFavorite = (e) => {
+        e.stopPropagation();
 
-        let updatedFavorites;
-        if (existingIndex >= 0) {
-            // Remove from favorites
-            updatedFavorites = favorites.filter((_, index) => index !== existingIndex);
+        if (isFavorite(selectedCity?.id)) {
+            dispatch(removeFavorite(selectedCity.id));
         } else {
-            // Add to favorites (prevent duplicates)
-            updatedFavorites = [...favorites, { ...location, id: Date.now() }];
-        }
-
-        saveFavoritesToStorage(updatedFavorites);
-        // Force re-render
-        if (onLocationChange) {
-            onLocationChange(location);
+            dispatch(addFavorite(selectedCity));
         }
     };
 
-    const isCurrentFavorite = isFavorite();
+    const isCurrentFavorite = isFavorite(selectedCity?.id);
 
     return (
         <section className="location-card" aria-label="Current location">
@@ -70,8 +42,8 @@ function LocationInfo({ location, onLocationChange }) {
                 <div className="location-card__info">
                     {/* City Name Row with Favorite Button */}
                     <div className="location-card__city-row">
-                        <h2 className="location-card__city" title={location.city}>
-                            {location.city}
+                        <h2 className="location-card__city" title={selectedCity?.name}>
+                            {selectedCity?.name}
                         </h2>
                         <button
                             type="button"
@@ -98,10 +70,10 @@ function LocationInfo({ location, onLocationChange }) {
                     </div>
 
                     {/* State and Country */}
-                    <p className="location-card__region" title={`${location.state}${location.state && location.country ? ', ' : ''}${location.country}`}>
-                        {location.state && <span className="location-card__state">{location.state}</span>}
-                        {location.state && location.country && <span className="location-card__separator">, </span>}
-                        {location.country && <span className="location-card__country">{location.country}</span>}
+                    <p className="location-card__region" title={`${selectedCity?.state}${selectedCity?.state && selectedCity?.country ? ', ' : ''}${selectedCity?.country}`}>
+                        {selectedCity?.state && <span className="location-card__state">{selectedCity.state}</span>}
+                        {selectedCity?.state && selectedCity?.country && <span className="location-card__separator">, </span>}
+                        {selectedCity?.country && <span className="location-card__country">{selectedCity.country}</span>}
                     </p>
                 </div>
             </div>

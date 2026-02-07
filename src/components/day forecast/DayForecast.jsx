@@ -1,20 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import DayForecastCard from '../day forecast card/DayForecastCard';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks';
+import { setSelectedDayIndex } from '../../features/weather/weatherSlice';
 import '../../styles/day forecast/DayForecast.css';
-
-/**
- * Sample forecast data for 7 days
- * In production, this would come from an API
- */
-const defaultForecastData = [
-    { id: 1, day: 'Tue', icon: 'sun-cloud', maxTemp: 32, minTemp: 24 },
-    { id: 2, day: 'Wed', icon: 'sun', maxTemp: 31, minTemp: 23 },
-    { id: 3, day: 'Thu', icon: 'sun-cloud', maxTemp: 31, minTemp: 24 },
-    { id: 4, day: 'Fri', icon: 'cloudy-sun', maxTemp: 32, minTemp: 24 },
-    { id: 5, day: 'Sat', icon: 'cloudy-sun', maxTemp: 32, minTemp: 25 },
-    { id: 6, day: 'Sun', icon: 'sun', maxTemp: 30, minTemp: 23 },
-    { id: 7, day: 'Mon', icon: 'sun', maxTemp: 31, minTemp: 24 },
-];
 
 /**
  * SevenDayForecast Component
@@ -23,8 +11,14 @@ const defaultForecastData = [
  * @param {Object} props
  * @param {Array} props.forecastData - Array of forecast objects (optional, uses default if not provided)
  */
-const DayForecast = ({ forecastData = defaultForecastData }) => {
-    const [activeDay, setActiveDay] = useState(0);
+const DayForecast = () => {
+    const dispatch = useAppDispatch();
+    const {
+        weather,
+        selectedDayIndex
+    } = useAppSelector((state) => state.weather);
+    if (!weather) return null;
+
     const [showLeftArrow, setShowLeftArrow] = useState(false);
     const [showRightArrow, setShowRightArrow] = useState(false);
     const scrollContainerRef = useRef(null);
@@ -69,8 +63,7 @@ const DayForecast = ({ forecastData = defaultForecastData }) => {
 
     // Handle card selection
     const handleCardClick = (index) => {
-        setActiveDay(index);
-
+        dispatch(setSelectedDayIndex(index))
         // Scroll the selected card into view on mobile
         const container = scrollContainerRef.current;
         if (!container) return;
@@ -107,14 +100,15 @@ const DayForecast = ({ forecastData = defaultForecastData }) => {
                     ref={scrollContainerRef}
                     onScroll={updateArrowVisibility}
                 >
-                    {forecastData.map((forecast, index) => (
+                    {weather?.daily?.map((forecast, index) => (
                         <DayForecastCard
                             key={forecast.id}
                             day={forecast.day}
-                            icon={forecast.icon}
+                            icon={'Sun'}
+                            // icon={forecast.icon}
                             maxTemp={forecast.maxTemp}
                             minTemp={forecast.minTemp}
-                            isActive={index === activeDay}
+                            isActive={index === selectedDayIndex}
                             onClick={() => handleCardClick(index)}
                         />
                     ))}
@@ -134,10 +128,10 @@ const DayForecast = ({ forecastData = defaultForecastData }) => {
 
             {/* Mobile Scroll Indicator Dots */}
             <div className="seven-day-forecast__dots">
-                {forecastData.map((_, index) => (
+                {weather?.daily?.map((_, index) => (
                     <button
                         key={index}
-                        className={`seven-day-forecast__dot ${index === activeDay ? 'active' : ''}`}
+                        className={`seven-day-forecast__dot ${index === selectedDayIndex ? 'active' : ''}`}
                         onClick={() => handleCardClick(index)}
                         aria-label={`Go to day ${index + 1}`}
                     />
