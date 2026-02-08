@@ -257,7 +257,7 @@ const HourForecastRadial = ({ hourlyData, selectedIndex, onHourSelect }) => {
 
                     <div className="hourly-radial__temp-row">
                         <div className="hourly-radial__temp-icon">
-                            <WeatherIcon condition={selectedHour.condition} size="100%" />
+                            <WeatherIcon weatherCode={selectedHour.weatherCode} isDay={selectedHour.isDay} />
                         </div>
                         <span className="hourly-radial__temp">{selectedHour.temp}°</span>
                     </div>

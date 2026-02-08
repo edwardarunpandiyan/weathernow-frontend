@@ -104,8 +104,7 @@ const DayForecast = () => {
                         <DayForecastCard
                             key={forecast.id}
                             day={forecast.day}
-                            icon={'Sun'}
-                            // icon={forecast.icon}
+                            icon={forecast.weatherCode}
                             maxTemp={forecast.maxTemp}
                             minTemp={forecast.minTemp}
                             isActive={index === selectedDayIndex}
