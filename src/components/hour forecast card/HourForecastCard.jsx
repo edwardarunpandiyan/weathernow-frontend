@@ -1,11 +1,18 @@
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks';
+import { formatNowTime } from '../../utils/dateAndTime'
 import WeatherIcon from '../../assets/WeatherIcon';
 import '../../styles/hourly forecast/HourlyForecast.css';
 
 /**
  * HourCard component displays weather info for a single hour
  */
+
 const HourForecastCard = ({ hourData, isSelected, isNow, onClick }) => {
+    const {
+        weather, currentMinute
+    } = useAppSelector((state) => state.weather);
+
     return (
         <div
             className={`hour-card ${isSelected ? 'hour-card--selected' : ''}`}
@@ -22,7 +29,7 @@ const HourForecastCard = ({ hourData, isSelected, isNow, onClick }) => {
             aria-label={`${hourData.timeLabel}, ${hourData.temp}°, ${hourData.condition}`}
         >
             {isNow && <span className="hour-card__now-label">Now</span>}
-            <span className="hour-card__time">{hourData.timeLabel}</span>
+            <span className="hour-card__time">{isNow ? formatNowTime(weather?.locationNow, currentMinute) : hourData.timeLabel}</span>
             <div className="hour-card__icon">
                 <WeatherIcon weatherCode={hourData.weatherCode} isDay={hourData.isDay} />
             </div>

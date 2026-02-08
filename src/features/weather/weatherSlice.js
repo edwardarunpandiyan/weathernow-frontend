@@ -21,6 +21,8 @@ const initialState = {
   error: null,
   selectedDayIndex: 0,
   selectedHourIndex: -1, // -1 means use current hour
+  currentMinute: null,
+  currentSecond: null
 };
 
 // Async thunk: Fetch weather data
@@ -76,6 +78,21 @@ const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {
+    // setMinuteFromLocationNow(state) {
+    //   if (!state.weather?.locationNow) return;
+
+    //   const timePart = state.weather.locationNow.split('T')[1];
+
+    //   state.currentMinute = parseInt(timePart.slice(3, 5), 10);
+    //   state.currentSecond = parseInt(timePart.slice(6, 8), 10);
+    // },
+    tickMinute(state) {
+      if (state.currentMinute === null) return;
+
+      if (state.currentMinute < 59) {
+        state.currentMinute += 1;
+      }
+    },
     setSelectedDayIndex(state, action) {
       state.selectedDayIndex = action.payload;
       state.selectedHourIndex = -1;
@@ -92,19 +109,19 @@ const weatherSlice = createSlice({
     removeFavorite(state, action) {
       state.favorites = removeFav(action.payload);
     },
-    updateCurrentHour(state) {
-      if (state.weather) {
-        const now = new Date();
-        const currentHour = now.getHours();
+    // updateCurrentHour(state) {
+    //   if (state.weather) {
+    //     const now = new Date();
+    //     const currentHour = now.getHours();
 
-        state.weather.hourly = state.weather.hourly.map((hour, index) => ({
-          ...hour,
-          isNow: index < 24 && hour.hour === currentHour,
-        }));
+    //     state.weather.hourly = state.weather.hourly.map((hour, index) => ({
+    //       ...hour,
+    //       isNow: index < 24 && hour.hour === currentHour,
+    //     }));
 
-        state.weather.locationNow = now.toISOString();
-      }
-    },
+    //     state.weather.locationNow = now.toISOString();
+    //   }
+    // },
     clearError(state) {
       state.error = null;
     },
@@ -122,6 +139,10 @@ const weatherSlice = createSlice({
         state.selectedCity = action.payload.city;
         state.selectedDayIndex = 0;
         state.selectedHourIndex = -1;
+        // extract minute + second from backend time
+        const timePart = action.payload.weather.locationNow.split("T")[1];
+        state.currentMinute = parseInt(timePart.slice(3, 5), 10);
+        state.currentSecond = parseInt(timePart.slice(6, 8), 10);
       })
       .addCase(fetchWeather.rejected, (state, action) => {
         state.isLoading = false;
@@ -163,6 +184,7 @@ export const {
   removeFavorite,
   updateCurrentHour,
   clearError,
+  tickMinute
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

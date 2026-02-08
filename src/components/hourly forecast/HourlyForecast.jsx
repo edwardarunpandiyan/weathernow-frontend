@@ -42,10 +42,13 @@ const HourlyForecast = () => {
 
     // Scroll to now card on mount
     useEffect(() => {
-        for (let i = 0; i < hourlyData.length; i++) {
-            if (hourlyData[i]?.isNow) setSelectedIndex(i)
+        if (!hourlyData.length) return;
+
+        const nowIndex = hourlyData.findIndex(h => h?.isNow);
+        if (nowIndex !== -1) {
+            setSelectedIndex(nowIndex);
         }
-    }, []);
+    }, [hourlyData]);
 
     // Scroll to selected card on mount
     useEffect(() => {
@@ -55,7 +58,7 @@ const HourlyForecast = () => {
                 selectedCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
             }
         }
-    }, []);
+    }, [hourlyData, selectedIndex]);
 
     // Handle hour selection - used by both cards and radial
     const handleHourSelect = (index) => {
