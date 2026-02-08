@@ -1,4 +1,6 @@
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks';
+import { formatNowTime } from '../../utils/dateAndTime'
 import WeatherIcon from '../../assets/WeatherIcon';
 import radial from '../../assets/radial.png'
 /**
@@ -6,6 +8,10 @@ import radial from '../../assets/radial.png'
  * with fixed 24-hour layout (12 AM - 11 PM) and weather data
  */
 const HourForecastRadial = ({ hourlyData, selectedIndex, onHourSelect }) => {
+    const {
+        weather, currentMinute
+    } = useAppSelector((state) => state.weather);
+
     const selectedHour = hourlyData[selectedIndex] || hourlyData[0];
 
     // SVG dimensions - increased to prevent clipping
@@ -252,7 +258,7 @@ const HourForecastRadial = ({ hourlyData, selectedIndex, onHourSelect }) => {
                 {/* Center content - detailed weather data */}
                 <div className="hourly-radial__center">
                     <span className="hourly-radial__time-label">
-                        {selectedHour.isNow ? 'Now ' : ''}{selectedHour.timeLabel}
+                        {selectedHour.isNow ? `Now ${formatNowTime(weather?.locationNow, currentMinute)}` : `${selectedHour.timeLabel}`}
                     </span>
 
                     <div className="hourly-radial__temp-row">
