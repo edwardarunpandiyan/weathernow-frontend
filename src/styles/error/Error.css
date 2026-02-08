@@ -1,0 +1,52 @@
+/* Full page background */
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background: linear-gradient(135deg,
+            #eff6ff,
+            #ffffff,
+            #f5f3ff); */
+}
+
+/* Card container */
+.error-card {
+    max-width: 420px;
+    padding: 32px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon */
+.error-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+/* Title */
+.error-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+}
+
+/* Retry button */
+.error-retry-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.error-retry-btn:hover {
+    background-color: #2563eb;
+}

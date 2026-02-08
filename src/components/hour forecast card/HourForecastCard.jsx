@@ -24,7 +24,7 @@ const HourForecastCard = ({ hourData, isSelected, isNow, onClick }) => {
             {isNow && <span className="hour-card__now-label">Now</span>}
             <span className="hour-card__time">{hourData.timeLabel}</span>
             <div className="hour-card__icon">
-                <WeatherIcon condition={hourData.condition} size={48} />
+                <WeatherIcon weatherCode={hourData.weatherCode} isDay={hourData.isDay} />
             </div>
             <span className="hour-card__temp">{hourData.temp}°</span>
         </div>
