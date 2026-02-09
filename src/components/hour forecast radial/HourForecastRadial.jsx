@@ -213,7 +213,6 @@ const HourForecastRadial = ({ hourlyData, selectedIndex, onHourSelect }) => {
                         const entry = hourDataMap[hour];
                         const hasData = entry !== undefined;
                         const isSelected = hour === selectedHourValue;
-                        console.log(hour, hasData)
                         return (
                             <circle
                                 key={hour}

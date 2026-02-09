@@ -28,11 +28,11 @@ const initialState = {
 // Async thunk: Fetch weather data
 export const fetchWeather = createAsyncThunk(
   "weather/fetchWeather",
-  async (city, { rejectWithValue }) => {
+  async ({ city, silent = false }, { rejectWithValue }) => {
     try {
       const data = await getWeather(city.latitude, city.longitude);
       setRecentCity(city);
-      return { weather: data.data, city };
+      return { weather: data.data, city, silent };
     } catch (error) {
       return rejectWithValue("Failed to fetch weather data");
     }
@@ -55,7 +55,7 @@ export const fetchCitySuggestions = createAsyncThunk(
 // Async thunk: Initialize app
 export const initializeApp = createAsyncThunk(
   "weather/initializeApp",
-  async (_, { dispatch }) => {
+  async ({ silent = false } = {}, { dispatch }) => {
     let cityToLoad = getRecentCity();
 
     if (!cityToLoad) {
@@ -69,7 +69,7 @@ export const initializeApp = createAsyncThunk(
       cityToLoad = DEFAULT_CITY;
     }
 
-    await dispatch(fetchWeather(cityToLoad));
+    await dispatch(fetchWeather({ city: cityToLoad, silent }));
     return cityToLoad;
   }
 );
@@ -130,7 +130,9 @@ const weatherSlice = createSlice({
     builder
       // Fetch weather
       .addCase(fetchWeather.pending, (state) => {
-        state.isLoading = true;
+        if (!action.meta.arg?.silent) {
+          state.isLoading = true;
+        }
         state.error = null;
       })
       .addCase(fetchWeather.fulfilled, (state, action) => {
