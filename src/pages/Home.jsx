@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { initializeApp, tickMinute } from "../features/weather/weatherSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/useAppHooks";
-
 import Header from "../components/header/Header";
 import LocationInfo from "../components/location info/LocationInfo";
 import DayForecast from "../components/day forecast/DayForecast";
@@ -11,7 +10,6 @@ import Error from "../components/error/Error";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-
   const {
     isLoading,
     weather,
@@ -20,7 +18,7 @@ export default function Home() {
   } = useAppSelector(
     (state) => state.weather
   );
-  console.log({ currentMinute, currentSecond })
+
   // Initialize app on first mount
   useEffect(() => {
     dispatch(initializeApp());
@@ -29,24 +27,16 @@ export default function Home() {
   // ⏱️ Minute timer logic (SIMPLE & ACCURATE)
   useEffect(() => {
     if (currentMinute == null || currentSecond == null) return;
-
     let intervalId;
-
     // time until next minute boundary
     const delayToNextMinute = (60 - currentSecond) * 1000;
-    console.log({ delayToNextMinute });
-
     const timeoutId = setTimeout(() => {
-      console.log("⏱ aligned to minute");
-
       // 🔥 TICK IMMEDIATELY at boundary
       dispatch(tickMinute());
-
       // 🔁 THEN continue every 60s
       intervalId = setInterval(() => {
         dispatch((dispatch, getState) => {
           const { currentMinute } = getState().weather;
-
           if (currentMinute === 59) {
             dispatch(initializeApp({ silent: true }));
           } else {

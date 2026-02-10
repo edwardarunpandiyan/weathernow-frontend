@@ -176,7 +176,11 @@ function Header() {
               <ellipse cx="34" cy="36" rx="22" ry="4" fill="#d0e8f5" opacity="0.5" />
             </svg>
           </div>
-          <h1 className="header__app-name">WeatherNow</h1>
+          <h1 className="header__app-name">
+            <span className="header__app-name--weather">Weather</span>
+            <span className="header__app-name--now">Now</span>
+          </h1>
+
         </div>
 
         {/* Search and Favorite */}

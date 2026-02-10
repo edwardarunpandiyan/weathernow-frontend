@@ -28,11 +28,11 @@ const initialState = {
 // Async thunk: Fetch weather data
 export const fetchWeather = createAsyncThunk(
   "weather/fetchWeather",
-  async ({ city, silent = false }, { rejectWithValue }) => {
+  async (city, { rejectWithValue }) => {
     try {
       const data = await getWeather(city.latitude, city.longitude);
       setRecentCity(city);
-      return { weather: data.data, city, silent };
+      return { weather: data.data, city };
     } catch (error) {
       return rejectWithValue("Failed to fetch weather data");
     }
@@ -57,19 +57,17 @@ export const initializeApp = createAsyncThunk(
   "weather/initializeApp",
   async ({ silent = false } = {}, { dispatch }) => {
     let cityToLoad = getRecentCity();
-
     if (!cityToLoad) {
       const favorites = getFavorites();
       if (favorites.length > 0) {
         cityToLoad = favorites[0];
       }
     }
-
     if (!cityToLoad) {
       cityToLoad = DEFAULT_CITY;
     }
-
-    await dispatch(fetchWeather({ city: cityToLoad, silent }));
+    cityToLoad.silent = silent
+    await dispatch(fetchWeather(cityToLoad));
     return cityToLoad;
   }
 );
@@ -78,14 +76,6 @@ const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {
-    // setMinuteFromLocationNow(state) {
-    //   if (!state.weather?.locationNow) return;
-
-    //   const timePart = state.weather.locationNow.split('T')[1];
-
-    //   state.currentMinute = parseInt(timePart.slice(3, 5), 10);
-    //   state.currentSecond = parseInt(timePart.slice(6, 8), 10);
-    // },
     tickMinute(state) {
       if (state.currentMinute === null) return;
 
@@ -109,19 +99,6 @@ const weatherSlice = createSlice({
     removeFavorite(state, action) {
       state.favorites = removeFav(action.payload);
     },
-    // updateCurrentHour(state) {
-    //   if (state.weather) {
-    //     const now = new Date();
-    //     const currentHour = now.getHours();
-
-    //     state.weather.hourly = state.weather.hourly.map((hour, index) => ({
-    //       ...hour,
-    //       isNow: index < 24 && hour.hour === currentHour,
-    //     }));
-
-    //     state.weather.locationNow = now.toISOString();
-    //   }
-    // },
     clearError(state) {
       state.error = null;
     },
@@ -129,7 +106,7 @@ const weatherSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetch weather
-      .addCase(fetchWeather.pending, (state) => {
+      .addCase(fetchWeather.pending, (state, action) => {
         if (!action.meta.arg?.silent) {
           state.isLoading = true;
         }
@@ -150,7 +127,6 @@ const weatherSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
-
       // Fetch suggestions
       .addCase(fetchCitySuggestions.pending, (state) => {
         state.isSuggestionsLoading = true;
@@ -163,10 +139,9 @@ const weatherSlice = createSlice({
         state.isSuggestionsLoading = false;
         state.suggestions = [];
       })
-
       // Initialize app
       .addCase(initializeApp.pending, (state) => {
-        state.isLoading = true;
+        state.isLoading = false;
       })
       .addCase(initializeApp.fulfilled, (state) => {
         state.isLoading = false;

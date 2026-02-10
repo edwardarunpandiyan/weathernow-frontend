@@ -61,10 +61,35 @@
         Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     font-size: 1.75rem;
     font-weight: 700;
-    color: #2d3e50;
+    /* color: #2d3e50; */
     margin: 0;
     letter-spacing: -0.5px;
 }
+
+/* Weather (Blue) */
+.header__app-name--weather {
+    color: #5E92C4;
+    /* weather blue */
+}
+
+/* Now (Gold) */
+.header__app-name--now {
+    color: #F5D394;
+    /* soft gold */
+}
+
+/* .header__app-name--weather {
+    background: linear-gradient(180deg, #42a5f5, #1e88e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header__app-name--now {
+    background: linear-gradient(180deg, #ffd54f, #f5b301);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+} */
+
 
 /* ==========================================================================
      Actions Section (Search + Favorite)
