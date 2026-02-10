@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "./useAppHooks";
-import { updateCurrentHour } from "../features/weather/weatherSlice";
+// import { updateCurrentHour } from "../features/weather/weatherSlice";
 
 export function useLiveTime() {
     const dispatch = useAppDispatch();
@@ -26,7 +26,7 @@ export function useLiveTime() {
             const newHour = now.getHours();
             if (newHour !== currentHour) {
                 setCurrentHour(newHour);
-                dispatch(updateCurrentHour());
+                // dispatch(updateCurrentHour());
             }
         }, 60000); // every minute
 

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { initializeApp, tickMinute } from "../features/weather/weatherSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/useAppHooks";
-
 import Header from "../components/header/Header";
 import LocationInfo from "../components/location info/LocationInfo";
 import DayForecast from "../components/day forecast/DayForecast";
@@ -11,7 +10,6 @@ import Error from "../components/error/Error";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-
   const {
     isLoading,
     weather,
@@ -20,7 +18,7 @@ export default function Home() {
   } = useAppSelector(
     (state) => state.weather
   );
-  console.log({ currentMinute })
+
   // Initialize app on first mount
   useEffect(() => {
     dispatch(initializeApp());
@@ -28,33 +26,32 @@ export default function Home() {
 
   // ⏱️ Minute timer logic (SIMPLE & ACCURATE)
   useEffect(() => {
-    if (
-      currentMinute === null ||
-      currentSecond === null
-    ) return;
-
+    if (currentMinute == null || currentSecond == null) return;
     let intervalId;
-
-    // align first tick with backend seconds
-    const initialDelay = (60 - currentSecond) * 1000;
-
+    // time until next minute boundary
+    const delayToNextMinute = (60 - currentSecond) * 1000;
     const timeoutId = setTimeout(() => {
+      // 🔥 TICK IMMEDIATELY at boundary
+      dispatch(tickMinute());
+      // 🔁 THEN continue every 60s
       intervalId = setInterval(() => {
-        if (currentMinute === 59) {
-          // refresh weather for same location
-          dispatch(initializeApp());
-        } else {
-          console.log('tick', currentMinute)
-          dispatch(tickMinute());
-        }
+        dispatch((dispatch, getState) => {
+          const { currentMinute } = getState().weather;
+          if (currentMinute === 59) {
+            dispatch(initializeApp({ silent: true }));
+          } else {
+            dispatch(tickMinute());
+          }
+        });
       }, 60000);
-    }, initialDelay);
+    }, delayToNextMinute);
 
     return () => {
       clearTimeout(timeoutId);
       if (intervalId) clearInterval(intervalId);
     };
-  }, [currentMinute, currentSecond, dispatch]);
+  }, [currentSecond, dispatch]);
+
 
   // Loading state
   if (isLoading) {
