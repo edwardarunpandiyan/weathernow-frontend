@@ -45,10 +45,10 @@
 }
 
 .header__logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    /* width: 40px; */
+    /* visual size */
+    height: auto;
+    /* maintain aspect ratio */
 }
 
 .header__logo-icon {

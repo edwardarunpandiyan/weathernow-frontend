@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppHooks'
 import { useDebounce } from '../../hooks/useDebounce'
-import { useLiveTime } from '../../hooks/useLiveTime'
 import {
   fetchWeather,
   fetchCitySuggestions,
@@ -11,8 +10,8 @@ import {
 } from '../../features/weather/weatherSlice';
 import { isFavorite } from '../../utils/storage';
 import { APP_CONFIG } from '../../config/appConfig';
-import '../../styles/header/Header.css';
 import appLogo from '../../assets/app-logo.svg'
+import '../../styles/header/Header.css';
 /**
  * Header Component
  * Responsive header with logo, app name, search bar, and favorite button.
@@ -24,9 +23,7 @@ function Header() {
     selectedCity,
     favorites,
     suggestions,
-    isSuggestionsLoading,
   } = useAppSelector((state) => state.weather);
-  const { formattedTime } = useLiveTime();
 
   const [searchValue, setSearchValue] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -152,36 +149,17 @@ function Header() {
       <div className="header__container">
         {/* Logo and App Name */}
         <div className="header__brand">
-          <div className="header__logo" aria-hidden="true">
-            {/* <svg
-              className="header__logo-icon"
-              viewBox="0 0 64 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-label="Cloud logo"
-            >
-             
-              <defs>
-                <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#a8d4f5" />
-                  <stop offset="50%" stopColor="#7ec8e3" />
-                  <stop offset="100%" stopColor="#5cb3d9" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M52 28c6.627 0 12-5.373 12-12S58.627 4 52 4c-1.5 0-2.938.275-4.262.777C44.895 2.014 40.685 0 36 0c-7.732 0-14 6.268-14 14 0 .342.012.68.036 1.016C18.158 15.28 15 18.614 15 22.75c0 4.004 3.004 7.308 6.882 7.75H52z"
-                fill="url(#cloudGradient)"
-              />
-             
-              <ellipse cx="34" cy="36" rx="22" ry="4" fill="#d0e8f5" opacity="0.5" />
-            </svg> */}
-            <img src={appLogo} width={70} height={50} />
-          </div>
+          <img
+            src={appLogo}
+            alt="WeatherNow logo"
+            width={60}
+            height={50}
+            className="header__logo"
+          />
           <h1 className="header__app-name">
             <span className="header__app-name--weather">Weather</span>
             <span className="header__app-name--now">Now</span>
           </h1>
-
         </div>
 
         {/* Search and Favorite */}
