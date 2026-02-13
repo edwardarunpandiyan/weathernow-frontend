@@ -1,13 +1,10 @@
 /* Full page background */
 .error-page {
-    min-height: 100vh;
+    position: fixed;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* background: linear-gradient(135deg,
-            #eff6ff,
-            #ffffff,
-            #f5f3ff); */
 }
 
 /* Card container */
