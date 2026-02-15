@@ -1,71 +1,137 @@
-# WeatherNow Frontend
+# 🌤 WeatherNow Frontend
 
-WeatherNow Frontend is a React-based web application that provides
-real-time weather information with an intelligent city autocomplete
-experience.
+**WeatherNow** is a production-style React application that delivers
+real-time weather information with a clean, responsive, and scalable
+architecture.
 
-The application focuses on clean UX, debounced API calls, and clear
-separation from backend logic. All third-party API complexity is handled
-server-side.
+The application is built with a feature-driven structure, clear
+separation of concerns, reusable components, and environment-based
+configuration --- closely mimicking real-world product architecture
+standards.
 
----
+------------------------------------------------------------------------
 
-## 🚀 Features
+## 🚀 Key Features
 
-- City search with debounced autocomplete
-- Dynamic weather display after city selection
-- Loading and error states for better UX
-- Clean and minimal UI
-- Backend-driven data rendering
+-   🔎 Intelligent city search with debounced API calls\
+-   🌍 Real-time weather data rendering\
+-   🕒 Hourly weather alignment based on time changes\
+-   ⭐ Recent city persistence (local storage support)\
+-   🎯 Default city configuration for first-time users\
+-   ⏳ Skeleton loaders for better perceived performance\
+-   ⚠️ Proper loading & error handling states\
+-   📱 Fully responsive (Mobile / Tablet / Desktop)\
+-   🧩 Modular and scalable architecture
 
----
+------------------------------------------------------------------------
+
+## 🏗 Architecture Philosophy
+
+This project follows a **feature-based scalable structure** with
+separation of concerns:
+
+-   UI Components are reusable and presentation-focused\
+-   Feature modules contain domain-specific logic\
+-   Services layer handles API communication\
+-   Config layer manages environment and default settings\
+-   Hooks & utils provide reusable business logic
+
+The frontend does **not directly call third-party weather APIs**.\
+All external API complexity is abstracted through the backend service.
+
+------------------------------------------------------------------------
 
 ## 🛠 Tech Stack
 
-- React
-- JavaScript (ES6+)
-- Fetch API
-- CSS (basic styling)
+-   React (Functional Components + Hooks)
+-   JavaScript (ES6+)
+-   Fetch API
+-   CSS (Modular styling structure)
+-   Environment-based configuration
 
----
+------------------------------------------------------------------------
 
-## 📂 Project Structure
+## 📂 Updated Project Structure
 
     src/
-    ├── components/
-    │   └── Weather.jsx
-    ├── services/
-    │   └── weatherApi.js
-    ├── App.js
-    └── index.js
+    │
+    ├── app/                    # App-level setup & layout structure
+    │
+    ├── assets/                 # Static assets (icons, images, logos)
+    │
+    ├── components/             # Reusable UI components
+    │
+    ├── config/                 # Environment configs & default city setup
+    │
+    ├── features/
+    │   └── weather/
+    │       ├── weatherSlice.js # Redux slice (state, reducers, async thunks)
+    │
+    ├── hooks/                  # Custom reusable React hooks
+    │
+    ├── pages/                  # Page-level components (screen containers)
+    │
+    ├── services/               # API service layer (backend communication)
+    │
+    ├── styles/                 # Global and modular styling
+    │
+    ├── utils/                  # Utility/helper functions
+    │
+    ├── index.css               # Global base styles
+    └── main.jsx                # Application entry point
 
----
+------------------------------------------------------------------------
+
+## ⚙️ Configuration Strategy
+
+### Default City Logic
+
+-   On first launch → app loads weather using default city from `config`
+-   On subsequent visits → loads most recently searched city from local
+    storage
+-   Recent city updates automatically on every successful search
+
+### Environment Handling
+
+Environment variables are managed through `.env` configuration files.
+
+Example:
+
+    VITE_API_BASE_URL=http://localhost:5000
+
+------------------------------------------------------------------------
 
 ## ▶️ Getting Started
 
 ### Prerequisites
 
-- Node.js (v16+ recommended)
-- Backend server running locally
+-   Node.js (v16+ recommended)
+-   Backend server running
 
 ### Installation
 
     npm install
-    npm start
 
-The app will run on:
+### Run Development Server
 
-    http://localhost:3000
+    npm run dev
 
----
+Application will run at:
 
-## 📌 Notes
+    http://localhost:5173
 
-- City suggestions and weather data are fetched from the backend only
-- No third-party weather APIs are called directly from the frontend
-- Designed to mimic real-world frontend--backend separation
+------------------------------------------------------------------------
 
----
+## 📈 Production-Ready Considerations
+
+-   Clean separation between UI and business logic\
+-   Feature-based scalable structure\
+-   No direct third-party API exposure in frontend\
+-   Environment-driven configuration\
+-   Persistent user preferences\
+-   Structured service layer for easy backend migration
+
+------------------------------------------------------------------------
 
 ## 📄 License
 
